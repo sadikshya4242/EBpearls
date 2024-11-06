@@ -12,7 +12,7 @@ class BasePage:
 
     def wait_for_page_to_load(self):
         WebDriverWait(self.driver, self.timeout).until(
-            EC.presence_of_element_located((By.ID, "customer.firstName"))  # Change to a unique element on the registration page
+            EC.presence_of_element_located((By.ID, "customer.firstName"))
         )
 
     def click(self, locator):

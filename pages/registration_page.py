@@ -17,6 +17,7 @@ class RegistrationPage(BasePage):
         self.password_input = (By.ID, "customer.password")
         self.confirm_password_input = (By.ID, "repeatedPassword")
         self.register_button = (By.XPATH, "//input[@value='Register']")
+        self.logout_button = (By.XPATH, "//a[.='Log Out']")
 
     def register(self, first_name, last_name, address, city, state, zip_code, phone, ssn, base_username, password):
         # Click the register link
@@ -31,19 +32,13 @@ class RegistrationPage(BasePage):
         self.enter_text(self.zip_code_input, zip_code)
         self.enter_text(self.phone_input, phone)
         self.enter_text(self.ssn_input, ssn)
-
-        # Create a unique username
-        unique_username = f"{base_username}_{self.get_username_counter()}"
-        self.enter_text(self.username_input, unique_username)
-
+        self.enter_text(self.username_input, base_username)
         self.enter_text(self.password_input, password)
         self.enter_text(self.confirm_password_input, password)
 
         # Click the register button
         self.click(self.register_button)
 
-        return unique_username
-
-    def get_username_counter(self):
-        # Implement a simple counter here or fetch from a file for persistence
-        return 1  # Replace with actual counter logic
+        return base_username
+    def logout(self):
+        self.click(self.logout_button)

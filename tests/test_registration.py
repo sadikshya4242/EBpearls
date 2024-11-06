@@ -3,6 +3,8 @@ import pytest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
+from pages import registration_page
 from pages.registration_page import RegistrationPage
 
 @pytest.mark.usefixtures("setup")
@@ -10,21 +12,23 @@ class TestRegistration:
 
     def test_valid_registration_newusername(self):
         registration_page = RegistrationPage(self.driver)
-        base_username = "hello_user_7"  # Base username to be incremented
+        base_username = "hello_user_49"
         username = registration_page.register(
             "sadikshya", "bhusal", "baneshwor", "kathmandu", "bagmati",
             "12345", "1234567890", "123-45-6789", base_username, "password123"
         )
 
-        try:
-            success_message = WebDriverWait(self.driver, 10).until(
-                EC.visibility_of_element_located((By.XPATH, "//p[contains(text(), 'Your account was created successfully')]"))
-            ).text
-            assert "Your account was created successfully" in success_message
-            print(f"Registered with username: {username}")
-        except Exception as e:
-            print(f"Error occurred: {e}")
-            assert False, "Expected success message not displayed."
+        # Verify registration success message
+        success_message = WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located((By.XPATH, "//p[contains(text(), 'Your account was created successfully')]"))
+        ).text
+        assert "Your account was created successfully" in success_message
+        print(f"Registered with username: {username}")
+
+        # Call logout
+        time.sleep(2)
+        registration_page.logout()
+        time.sleep(2)
 
     def test_empty_fields(self):
         registration_page = RegistrationPage(self.driver)
@@ -41,7 +45,7 @@ class TestRegistration:
         registration_page = RegistrationPage(self.driver)
         registration_page.register(
             "sadikshya", "bhusal", "baneshwor", "kathmandu", "bagmati",
-            "12345", "1234567890", "123-45-6789", "hello_user_4_1", "password123"
+            "12345", "1234567890", "123-45-6789", "Sadikshya00", "1234"
         )
         error_message = WebDriverWait(self.driver, 10).until(
             EC.visibility_of_element_located((By.XPATH, "//span[contains(text(), 'This username already exists')]"))
